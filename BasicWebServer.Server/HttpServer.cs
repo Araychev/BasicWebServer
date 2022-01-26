@@ -71,6 +71,17 @@ namespace BasicWebServer.Server
             }
         }
 
+        private static void AddSession(Request request, Response response)
+        {
+            var sessionExists = request.Session.ContainsKey(Session.SessionCurrentDateKey);
+
+            if (!sessionExists)
+            {
+                request.Session[Session.SessionCurrentDateKey] = DateTime.Now.ToString();
+                response.Cookies.Add(Session.SessionCookieName, request.Session.Id);
+            }
+        }
+
         private async Task WriteResponse(NetworkStream networkStream, Response message)
         {
             var contentLenght = Encoding.UTF8.GetByteCount(message.ToString());
